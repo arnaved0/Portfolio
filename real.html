@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- 
+  ============================================================
+  Arnav Saraf — Electrical Engineering Portfolio (Single File)
+  (Rewritten with Personal panels + project title links)
+  ============================================================
+  HOW TO USE / EDIT:
+  - Search for TODO markers for easy edits.
+  - Project title links mirror the image links exactly (kept as-is).
+  - Personal section is now a card grid; swap images/text freely.
+  -->
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Arnav Saraf — Electrical Engineering Portfolio</title>
+  <meta name="description" content="Portfolio website for Arnav Saraf — Electrical Engineering projects, experience, skills, and more." />
+
+  <style>
+    :root {
+      /* ===== Theme quick-tweaks ===== */
+      --bg: #25384f;           /* page background */
+      --panel: #485574;        /* card/section background */
+      --text: #d2dbe6;         /* main text */
+      --muted: #c4ccd8;        /* secondary text */
+      --accent: #ffffff;       /* primary accent */
+      --accent-2: #72ffd6;     /* secondary accent */
+      --border: #243041;       /* hairline borders */
+      --radius: 16px;
+      --radius-lg: 22px;
+      --maxw: 1100px;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f7fbff;
+        --panel: #c9d6ff;
+        --text: #0f1b2d;
+        --muted: #4b5a6e;
+        --accent: #ffffff;
+        --accent-2: #00caa9;
+        --border: #e6edf5;
+        --shadow: 0 10px 30px rgba(17,42,87,.08);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      letter-spacing: 0.2px;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover, a:focus { text-decoration: underline; }
+    img { max-width: 100%; display: block; }
+
+    .container { width: min(92vw, var(--maxw)); margin: 0 auto; }
+
+    /* ===== Header / Hero ===== */
+    header {
+      position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(1.2) blur(8px);
+      background: color-mix(in oklab, var(--bg) 88%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; gap: 16px; }
+    .brand { display:flex; align-items:center; gap: 12px; }
+    .brand h1 { font-size: clamp(20px, 2.4vw, 26px); margin: 0; letter-spacing: .3px; }
+
+    .actions { display:flex; gap: 10px; flex-wrap: wrap; }
+    .btn { display:inline-flex; align-items:center; gap: 8px; border:1px solid var(--border); padding: 10px 14px; border-radius: 999px; background: linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), var(--panel));
+      color: var(--text); text-decoration:none; font-weight: 600; box-shadow: var(--shadow); }
+    .btn:hover { border-color: color-mix(in oklab, var(--accent) 50%, var(--border)); box-shadow: 0 12px 30px rgba(0,0,0,.25); transform: translateY(-1px); }
+    .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #05121f; }
+
+    /* Hero block */
+    .hero { display:grid; grid-template-columns: 1.2fr .8fr; gap: 24px; padding: 36px 0 24px; align-items: center; }
+    .card { background: var(--panel); border:1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow); }
+    .hero h2 { font-size: clamp(26px, 4.4vw, 42px); line-height: 1.15; margin: 0 0 8px; }
+    .hero p { color: var(--muted); font-size: clamp(15px, 1.6vw, 17px); margin: 0; }
+
+    .statbar { display:flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+    .pill { border: 1px solid var(--border); color: var(--muted); padding: 6px 10px; border-radius: 999px; font-size: 13px; }
+
+    .avatar { aspect-ratio: 4/3; border-radius: var(--radius-lg); overflow:hidden; border:1px solid var(--border); box-shadow: var(--shadow); }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ===== Sections ===== */
+    section { padding: 28px 0 10px; }
+    .section-title { display:flex; align-items:center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .section-title h3 { font-size: clamp(18px, 2.6vw, 24px); margin: 0; }
+    .section-title .rule { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+    /* ===== Projects Grid ===== */
+    .projects-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .project-card {
+      grid-column: span 4; /* 3 per row on desktop (12/4) */
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in oklab, var(--accent) 35%, var(--border));
+      box-shadow: 0 16px 40px rgba(0,0,0,.28);
+    }
+    .project-thumb {
+      display: block;              /* ensure image block on top */
+      aspect-ratio: 16/10;
+      background: #0e141b;
+      border-bottom: 1px solid var(--border);
+    }
+    .project-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .project-body {
+      display: block;              /* text sits UNDER the image */
+      padding: 14px 16px 16px;
+    }
+    .project-title {
+      margin: 0 0 4px;
+      font-size: 18px;
+      color: var(--text);
+    }
+    .project-title a { color: var(--accent); text-decoration: none; }
+    .project-title a:hover, .project-title a:focus { text-decoration: underline; }
+    .project-meta { color: var(--muted); font-size: 14px; margin: 0; }
+
+    /* ===== Experience ===== */
+    .timeline { display:grid; gap: 14px; }
+    .exp { background: var(--panel); border:1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+    .exp h4 { margin: 0 0 2px; font-size: 16px; }
+    .exp .sub { color: var(--muted); font-size: 14px; margin: 0 0 8px; }
+    .exp ul { margin: 0; padding-left: 18px; }
+
+    /* ===== Skills ===== */
+    .skills { display:grid; gap: 16px; grid-template-columns: repeat(12, 1fr); }
+    .skill-col { grid-column: span 6; background: var(--panel); border:1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+    .skill-col h5 { margin: 0 0 10px; font-size: 15px; letter-spacing: .4px; text-transform: uppercase; color: var(--muted); }
+    .chips { display:flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 6px 10px; border-radius: 999px; border:1px solid var(--border); background: color-mix(in oklab, var(--panel) 85%, transparent); font-size: 13px; }
+
+    /* ===== Personal (as panels grid) ===== */
+    .personal { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+    .personal-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .personal-card {
+      grid-column: span 4;              /* 3 per row on desktop */
+      background: color-mix(in oklab, var(--panel) 92%, black 8%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .personal-card:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in oklab, var(--accent) 35%, var(--border));
+      box-shadow: 0 16px 40px rgba(0,0,0,.28);
+    }
+    .personal-thumb {
+      display: block;
+      aspect-ratio: 4/3;               /* consistent thumbnail shape */
+      background: #0e141b;
+      border-bottom: 1px solid var(--border);
+    }
+    .personal-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .personal-body {
+      padding: 12px 14px 16px;
+    }
+    .personal-body h4 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      color: var(--accent);
+    }
+    .personal-body p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; }
+      .projects-grid .project-card { grid-column: span 6; } /* 2 per row on tablets */
+      .skills .skill-col { grid-column: span 12; }
+      .personal-card { grid-column: span 6; } /* 2 per row */
+    }
+    @media (max-width: 640px) {
+      .projects-grid .project-card { grid-column: span 12; } /* 1 per row on phones */
+      .personal-card { grid-column: span 12; } /* 1 per row */
+    }
+
+    /* ===== Motion preferences ===== */
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav" role="navigation" aria-label="Primary">
+      <div class="brand">
+        <h1>Engineering Portfolio</h1>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="https://drive.google.com/file/d/1fZQ-sy1JjL2o5HSqQnbDxcmJloFllwB5/view?usp=sharing" target="_blank" rel="noopener">Resume (PDF)</a>
+        <a class="btn" href="https://www.linkedin.com/in/arnav-saraf/" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
+        <a class="btn" href="mailto:arnavs1971@gmail.com" aria-label="Email">arnavs1971@gmail.com</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- ===== HERO / BIO ===== -->
+    <section class="hero" id="about">
+      <div class="card">
+        <h2>Arnav Saraf</h2>
+        <p>
+          I’m a first-year Electrical Engineering student at the University of Waterloo. I like work where drawings turn into things you can test—PCBs, robots, and small devices. I learn by building, keeping notes, and iterating.
+        </p>
+        <div class="statbar" aria-hidden="true">
+          <span class="pill">Hardware + Firmware</span>
+          <span class="pill">CAD + Rapid Prototyping</span>
+          <span class="pill">Robotics</span>
+        </div>
+      </div>
+      <div class="avatar" aria-label="Portfolio preview image">
+        <img src="https://images.unsplash.com/photo-1555255707-c07966088b7b?q=80&w=1400&auto=format&fit=crop" alt="Close-up of PCB and electronics workbench." />
+      </div>
+    </section>
+
+    <!-- ===== PROJECTS ===== -->
+    <section id="projects">
+      <div class="section-title">
+        <h3>Projects</h3>
+        <div class="rule" aria-hidden="true"></div>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Project 1 -->
+        <article class="project-card">
+          <a class="project-thumb" href="https://docs.google.com/document/d/1on-VO0tYvfKUWJ5uWTOMl_as87gN10TwcNVzQaik_nY/edit?usp=sharing" target="_blank" rel="noopener" aria-label="Open project PDF: Electromagnetic Coil Launcher">
+            <img src="img\sdSchematic.png" alt="Electromagnetic coil launcher prototype on a bench." />
+          </a>
+          <div class="project-body">
+            <!-- Title now links to the SAME href as the image above (kept as-is: #) -->
+            <h4 class="project-title">
+              <a href="https://docs.google.com/document/d/1on-VO0tYvfKUWJ5uWTOMl_as87gN10TwcNVzQaik_nY/edit?usp=sharing" target="_blank" rel="noopener">CAN Logger</a>
+            </h4>
+            <p class="project-meta">PCB design/layout, Altium Designer</p>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project-card">
+          <a class="project-thumb" href="https://docs.google.com/document/d/1WirqfEkASP_vqWMwpqWKYijGpoq9yqcMrtykkbcdfLE/edit?usp=sharing" target="_blank" rel="noopener" aria-label="Open project PDF: Rocket Car">
+            <img src="img/FRCelevator.png" alt="3D printed rocket car chassis with wiring." />
+          </a>
+          <div class="project-body">
+            <!-- Title link kept same as thumbnail: # -->
+            <h4 class="project-title">
+              <a href="https://docs.google.com/document/d/1WirqfEkASP_vqWMwpqWKYijGpoq9yqcMrtykkbcdfLE/edit?usp=sharing" target="_blank" rel="noopener">FRC Elevator Prototype</a>
+            </h4>
+            <p class="project-meta">CAD (Fusion 360, Onshape), 3D printng, Woodshop tools, Laser Cutting</p>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="project-card">
+          <a class="project-thumb" href="https://docs.google.com/document/d/1dOmY6XCTjeEFz2NsJ_imODBVkRRBvex3PEFBkAWFq2Y/edit?usp=sharing" target="_blank" rel="noopener" aria-label="Open project PDF: Pedometer in MATLAB">
+            <img src="img/basePic.jpg" alt="Graph display and simple sensor prototype." />
+          </a>
+          <div class="project-body">
+            <!-- Title link kept same as thumbnail: "" (empty string) -->
+            <h4 class="project-title">
+              <a href="https://docs.google.com/document/d/1dOmY6XCTjeEFz2NsJ_imODBVkRRBvex3PEFBkAWFq2Y/edit?usp=sharing" target="_blank" rel="noopener">FRC Base Design/Assembly</a>
+            </h4>
+            <p class="project-meta">TIG Welding, Electronic Assembly, Soldering</p>
+          </div>
+        </article>
+
+        <!-- Project 4 -->
+        <article class="project-card">
+          <a class="project-thumb" href="https://docs.google.com/document/d/1hmQ2oFIqS7l-_OiWnjm05VqmEpehHuo6KhvSAOlggI8/edit?usp=sharing" target="_blank" rel="noopener" aria-label="Open project PDF: Robotics — Ten Ton Academy">
+            <img src="img/boat.png" alt="Competition-ready robot with electronics and sensors." />
+          </a>
+          <div class="project-body">
+            <!-- Title link kept same as thumbnail: # -->
+            <h4 class="project-title">
+              <a href="https://docs.google.com/document/d/1hmQ2oFIqS7l-_OiWnjm05VqmEpehHuo6KhvSAOlggI8/edit?usp=sharing" target="_blank" rel="noopener">Solar Boat</a>
+            </h4>
+            <p class="project-meta">Soldering, CAD, 3D printing</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== EXPERIENCE ===== -->
+    <section id="experience">
+      <div class="section-title">
+        <h3>Experience</h3>
+        <div class="rule" aria-hidden="true"></div>
+      </div>
+
+      <div class="timeline">
+        <article class="exp">
+          <h4>Waterloo Aerial Robotics Group (WARG)</h4>
+          <p class="sub">University of Waterloo - Waterloo, ON &nbsp;&nbsp; (Aug. 2025 - Present)</p>
+          <ul>
+            <li>Designed a CAN logger using the STM32 and SDMMC protocol to log flight data to an SD card (Altium).</li>
+            <li>Applied electrical theory to create efficient PCB layouts considering resistance, heat, and impedance.</li>
+            <li>Manufactured PCBs: ordering, soldering, and validation testing.</li>
+          </ul>
+        </article>
+
+        <article class="exp">
+          <h4>First Robotics Competition (FRC)</h4>
+          <p class="sub">Ten Ton Robotics Academy - Vancouver, BC &nbsp;&nbsp; (Sept. 2024 - Aug. 2025)</p>
+          <ul>
+            <li>Used collaborative CAD to plan complex mechanisms and robot layouts.</li>
+            <li>Rapidly prototyped designs using wood, aluminum, and 3D-printed parts.</li>
+            <li>Assembled electronics with a repairable wiring layout; soldering and cable management.</li>
+            <li>Manufactured parts with 3-axis CNC, 3D printer, and laser cutter.</li>
+            <li>Recorded and analyzed match data in Excel to find weak spots and strategies.</li>
+          </ul>
+        </article>
+
+        <article class="exp">
+          <h4>VEX Robotics Competition (VRC)</h4>
+          <p class="sub">Ten Ton Robotics Academy - Vancouver, BC &nbsp;&nbsp; (Sept. 2020 - Jun. 2024)</p>
+          <ul>
+            <li>Led a team for 4 years across design, programming, and strategy; qualified for provincials.</li>
+            <li>Iterated and documented improvements, keeping detailed build/design logs.</li>
+            <li>Programmed autonomous routines in C++ with PID for precision and reliability.</li>
+            <li>Planned designs and records in Fusion 360 and Onshape.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== SKILLS ===== -->
+    <section id="skills">
+      <div class="section-title">
+        <h3>Skills</h3>
+        <div class="rule" aria-hidden="true"></div>
+      </div>
+
+      <div class="skills">
+        <div class="skill-col" aria-labelledby="sk-prog">
+          <h5 id="sk-prog">Programming Languages</h5>
+          <div class="chips">
+            <span class="chip">C/C++</span>
+            <span class="chip">Python</span>
+            <span class="chip">MATLAB</span>
+            <span class="chip">Arduino</span>
+          </div>
+        </div>
+
+        <div class="skill-col" aria-labelledby="sk-cad">
+          <h5 id="sk-cad">CAD</h5>
+          <div class="chips">
+            <span class="chip">Fusion 360</span>
+            <span class="chip">Onshape</span>
+            <span class="chip">Altium (basics)</span>
+          </div>
+        </div>
+
+        <div class="skill-col" aria-labelledby="sk-tools">
+          <h5 id="sk-tools">Tools</h5>
+          <div class="chips">
+            <span class="chip">Oscilloscope</span>
+            <span class="chip">Multimeter</span>
+            <span class="chip">Soldering Station</span>
+            <span class="chip">3D Printer</span>
+          </div>
+        </div>
+
+        <div class="skill-col" aria-labelledby="sk-other">
+          <h5 id="sk-other">Other</h5>
+          <div class="chips">
+            <span class="chip">Technical Writing</span>
+            <span class="chip">Lab Safety</span>
+            <span class="chip">Team Leadership</span>
+            <span class="chip">Version Control (Git)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PERSONAL (as image/text panels) ===== -->
+    <section id="personal">
+      <div class="section-title">
+        <h3>Personal</h3>
+        <div class="rule" aria-hidden="true"></div>
+      </div>
+      <div class="personal">
+        <div class="personal-grid" aria-label="Personal gallery">
+          <!-- Panel 1 -->
+          <article class="personal-card">
+            <figure class="personal-thumb">
+              <!-- TODO: replace with your image -->
+              <img src="img/Squash.jpg" alt="On-court squash action shot." />
+            </figure>
+            <div class="personal-body">
+              <h4>Squash</h4>
+              <p>I've been playing since I was 13. I'm currently on the Waterloo Varsity Team.</p>
+            </div>
+          </article>
+
+          <!-- Panel 2 -->
+          <article class="personal-card">
+            <figure class="personal-thumb">
+              <img src="img/piano.jpg" alt="Close-up of piano keys during practice." />
+            </figure>
+            <div class="personal-body">
+              <h4>Piano</h4>
+              <p>I like playing things from classical to pop</p>
+            </div>
+          </article>
+
+          <!-- Panel 3 -->
+          <article class="personal-card">
+            <figure class="personal-thumb">
+              <img src="img/dd.webp" alt="Workbench photo of a PCB and soldering setup." />
+            </figure>
+            <div class="personal-body">
+              <h4>My dog</h4>
+              <p>I like taking him for walks and hikes. He also sings when I play the piano.</p>
+            </div>
+          </article>
+
+          <!-- Panel 4 (optional) -->
+          <article class="personal-card">
+            <figure class="personal-thumb">
+              <img src="img/cc.webp" alt="Macro photo of components and braided wire." />
+            </figure>
+            <div class="personal-body">
+              <h4>Hiking</h4>
+              <p>Being from Vancouver, I like hiking. My favourite hike is The Chief.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>© <span id="year"></span> Arnav Saraf · Built with plain HTML/CSS</p>
+    </footer>
+  </main>
+
+  <script>
+    // Update the year automatically
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Optional: Smooth scroll for in-page links (if you add a nav with #links)
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+      const id = link.getAttribute('href');
+      const dest = document.querySelector(id);
+      if (dest) {
+        e.preventDefault();
+        dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  </script>
+</body>
+</html>
