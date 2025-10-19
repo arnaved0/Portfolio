@@ -1,582 +1,461 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arnav Saraf - Portfolio</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-        
-        body {
-            box-sizing: border-box;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --primary-color: #64ffda;
-            --secondary-color: #ff6b9d;
-            --accent-color: #ffd93d;
-            --text-color: #e8f4f8;
-            --bg-color: #0a0e1a;
-            --bg-overlay: rgba(10, 14, 26, 0.85);
-            --name-variable-color: #9cdcfe;
-            --name-property-color: #dcdcaa;
-            --name-dot-color: #d4d4d4;
-        }
-        
-        body {
-            font-family: 'JetBrains Mono', monospace;
-            background: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
-            height: 100%;
-        }
-        
-        html {
-            height: 100%;
-            scroll-behavior: smooth;
-        }
-        
-        /* Animated Background */
-        .bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-        
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 1s ease-out;
-        }
-        
-        .typing-text {
-            font-size: 4rem;
-            font-weight: 900;
-            color: var(--primary-color);
-            text-shadow: 0 0 20px var(--primary-color);
-            letter-spacing: 0.1em;
-        }
-        
-        .cursor { animation: blink 1s infinite; }
-        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
-        
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            z-index: 100;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid var(--primary-color);
-        }
-        
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 0 10px var(--primary-color), 0 0 5px rgba(0, 0, 0, 0.8);
-        }
-        
-        .nav-links { display: flex; list-style: none; gap: 2rem; }
-        .nav-links a {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-        }
-        .nav-links a:hover {
-            color: var(--primary-color);
-            background: rgba(100, 255, 218, 0.1);
-            text-shadow: 0 0 10px var(--primary-color);
-            transform: translateY(-2px);
-        }
-        
-        /* Theme Switcher */
-        .theme-switcher { display: flex; gap: 0.5rem; }
-        .theme-btn {
-            width: 30px;
-            height: 30px;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-        }
-        .theme-btn:hover { transform: scale(1.2); box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); }
-        .theme-green { background: linear-gradient(45deg, #64ffda, #4ecdc4); }
-        .theme-purple { background: linear-gradient(45deg, #bb86fc, #cf6679); }
-        .theme-orange { background: linear-gradient(45deg, #ffab40, #ff7043); }
-        .theme-blue { background: linear-gradient(45deg, #42a5f5, #26c6da); }
-        
-        /* Sections */
-        .section {
-            min-height: 100vh;
-            padding: 6rem 2rem 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container { max-width: 1200px; width: 100%; margin: 0 auto; }
-        
-        /* Hero Section */
-        .hero { text-align: center; animation: fadeInUp 1s ease-out; }
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 30px var(--primary-color);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        .name-variable { color: var(--name-variable-color); }
-        .name-property { color: var(--name-property-color); }
-        .name-dot { color: var(--name-dot-color); }
-        .hero p { font-size: 1.2rem; color: var(--accent-color); margin-bottom: 2rem; }
-        .resume-btn {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: var(--bg-color);
-            border: none; padding: 1rem 2rem; border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; cursor: pointer;
-            transition: all 0.3s ease; text-decoration: none; display: inline-block; margin-top: 1rem;
-            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
-        }
-        .resume-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 25px rgba(100, 255, 218, 0.5); filter: brightness(1.2); }
-        @keyframes glow { from { text-shadow: 0 0 20px var(--primary-color); } to { text-shadow: 0 0 40px var(--primary-color), 0 0 60px var(--primary-color); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Section Headers */
-        .section-header { text-align: center; margin-bottom: 4rem; }
-        .section-header h2 { font-size: 3rem; font-weight: 900; color: var(--primary-color); text-shadow: 0 0 20px var(--primary-color); margin-bottom: 1rem; }
-        
-        /* About Section */
-        .about-content { max-width: 800px; margin: 0 auto; text-align: center; }
-        .about-text {
-            font-size: 1.2rem; line-height: 1.8; color: var(--text-color);
-            background: var(--bg-overlay); padding: 3rem; border-radius: 15px;
-            border: 2px solid var(--primary-color); box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
-            transition: all 0.3s ease;
-        }
-        .about-text:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(100, 255, 218, 0.5); }
-        
-        /* Projects Grid */
-        .projects-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem; margin-top: 2rem;
-        }
-        .project-card {
-            background: var(--bg-overlay); border-radius: 15px; padding: 2rem;
-            border: 2px solid var(--accent-color); transition: all 0.3s ease; cursor: pointer;
-        }
-        .project-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px rgba(0, 212, 255, 0.4); border-color: var(--primary-color); }
-        .project-image {
-            width: 100%; height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-            border-radius: 10px; margin-bottom: 1rem; display: block; overflow: hidden;
-        }
-        /* Ensure <img> fills the project image box */
-        .project-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        
-        .project-card h3 { font-size: 1.5rem; color: var(--primary-color); margin-bottom: 1rem; }
-        .project-card p { color: var(--text-color); margin-bottom: 1.5rem; line-height: 1.6; }
-        .details-btn {
-            background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); color: #000;
-            border: none; padding: 0.8rem 1.5rem; border-radius: 25px; font-family: 'JetBrains Mono', monospace;
-            font-weight: 700; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block;
-        }
-        .details-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 255, 65, 0.4); filter: brightness(1.2); }
-        
-        /* Experience & Skills */
-        .experience-grid, .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
-        .experience-item, .skill-item { background: var(--bg-overlay); padding: 2rem; border-radius: 10px; border: 2px solid var(--secondary-color); transition: all 0.3s ease; }
-        .experience-item:hover, .skill-item:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(255, 0, 128, 0.3); border-color: var(--primary-color); }
-        .experience-item h3, .skill-item h3 { color: var(--secondary-color); margin-bottom: 1rem; font-size: 1.3rem; }
-        
-        /* Contact Section */
-        .contact-content {
-            text-align: center; background: var(--bg-overlay); padding: 4rem; border-radius: 20px; border: 2px solid var(--primary-color);
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
-        }
-        .contact-btn {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: #000; border: none; padding: 1rem 2rem; border-radius: 30px;
-            font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease; margin-top: 2rem; text-decoration: none; display: inline-block;
-        }
-        .contact-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 30px rgba(0, 255, 65, 0.5); filter: brightness(1.3); }
-        
-        /* Click Effect */
-        .click-effect { position: fixed; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%); pointer-events: none; z-index: 50; animation: clickExpand 0.6s ease-out forwards; }
-        @keyframes clickExpand { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-links { gap: 1rem; }
-            .hero h1 { font-size: 2.5rem; }
-            .typing-text { font-size: 2rem; }
-            .about-content { padding: 0 1rem; }
-            .section-header h2 { font-size: 2rem; }
-            .projects-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arnav Saraf - Portfolio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+    body { box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary-color: #64ffda;
+      --secondary-color: #ff6b9d;
+      --accent-color: #ffd93d;
+      --text-color: #e8f4f8;
+      --bg-color: #0a0e1a;
+      --bg-overlay: rgba(10, 14, 26, 0.85);
+      --name-variable-color: #9cdcfe;
+      --name-property-color: #dcdcaa;
+      --name-dot-color: #d4d4d4;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-color);
+      color: var(--text-color);
+      overflow-x: hidden;
+      height: 100%;
+    }
+
+    html { height: 100%; scroll-behavior: smooth; }
+
+    /* Animated Background */
+    .bg-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+    /* Loading Screen */
+    .loading-screen {
+      position: fixed; inset: 0; width: 100%; height: 100%; background: #000;
+      display: flex; justify-content: center; align-items: center;
+      z-index: 1000; transition: opacity 0.6s ease-out;
+    }
+    .typing-text { font-size: 4rem; font-weight: 900; color: var(--primary-color); text-shadow: 0 0 20px var(--primary-color); letter-spacing: 0.1em; will-change: transform, opacity; }
+    .cursor { animation: blink 1s infinite; }
+    @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+    /* Navigation */
+    .navbar {
+      position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(10px); padding: 1rem 2rem; z-index: 100;
+      transition: all 0.3s ease; border-bottom: 1px solid var(--primary-color);
+    }
+    .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .logo { font-size: 1.5rem; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--primary-color), 0 0 5px rgba(0,0,0,0.8); }
+    .nav-links { display: flex; list-style: none; gap: 2rem; }
+    .nav-links a { color: #fff; text-decoration: none; font-weight: 700; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 5px; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
+    .nav-links a:hover { color: var(--primary-color); background: rgba(100,255,218,0.1); text-shadow: 0 0 10px var(--primary-color); transform: translateY(-2px); }
+
+    /* Theme Switcher */
+    .theme-switcher { display: flex; gap: 0.5rem; }
+    .theme-btn { width: 30px; height: 30px; border: none; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+    .theme-btn:hover { transform: scale(1.2); box-shadow: 0 0 20px rgba(255,255,255,0.6); }
+    .theme-green { background: linear-gradient(45deg, #64ffda, #4ecdc4); }
+    .theme-purple { background: linear-gradient(45deg, #bb86fc, #cf6679); }
+    .theme-orange { background: linear-gradient(45deg, #ffab40, #ff7043); }
+    .theme-blue   { background: linear-gradient(45deg, #42a5f5, #26c6da); }
+
+    /* Sections */
+    .section { min-height: 100vh; padding: 6rem 2rem 4rem; display: flex; align-items: center; justify-content: center; }
+    .container { max-width: 1200px; width: 100%; margin: 0 auto; }
+
+    /* Hero */
+    .hero { text-align: center; }
+    .hero h1 { font-size: 4rem; font-weight: 600; margin-bottom: 1rem; text-shadow: 0 0 30px var(--primary-color); animation: glow 2s ease-in-out infinite alternate; opacity: 0; } /* will fade in after intro aligns */
+    .name-variable { color: var(--name-variable-color); }
+    .name-property { color: var(--name-property-color); }
+    .name-dot { color: var(--name-dot-color); }
+    .hero p { font-size: 1.2rem; color: var(--accent-color); margin-bottom: 2rem; }
+    .resume-btn { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: var(--bg-color); border: none; padding: 1rem 2rem; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; margin-top: 1rem; box-shadow: 0 4px 15px rgba(100,255,218,0.3); }
+    .resume-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 25px rgba(100,255,218,0.5); filter: brightness(1.2); }
+    @keyframes glow { from { text-shadow: 0 0 20px var(--primary-color); } to { text-shadow: 0 0 40px var(--primary-color), 0 0 60px var(--primary-color); } }
+
+    /* Section Headers */
+    .section-header { text-align: center; margin-bottom: 4rem; }
+    .section-header h2 { font-size: 3rem; font-weight: 900; color: var(--primary-color); text-shadow: 0 0 20px var(--primary-color); margin-bottom: 1rem; }
+
+    /* About */
+    .about-content { max-width: 800px; margin: 0 auto; text-align: center; }
+    .about-text { font-size: 1.2rem; line-height: 1.8; color: var(--text-color); background: var(--bg-overlay); padding: 3rem; border-radius: 15px; border: 2px solid var(--primary-color); box-shadow: 0 0 20px rgba(100,255,218,0.3); transition: all 0.3s ease; }
+    .about-text:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(100,255,218,0.5); }
+
+    /* Projects */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 2rem; }
+    .project-card { background: var(--bg-overlay); border-radius: 15px; padding: 2rem; border: 2px solid var(--accent-color); transition: all 0.3s ease; cursor: pointer; }
+    .project-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px rgba(0,212,255,0.4); border-color: var(--primary-color); }
+    .project-image { width: 100%; height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); border-radius: 10px; margin-bottom: 1rem; display: block; overflow: hidden; }
+    .project-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .project-card h3 { font-size: 1.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+    .project-card p { color: var(--text-color); margin-bottom: 1.5rem; line-height: 1.6; }
+    .details-btn { background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); color: #000; border: none; padding: 0.8rem 1.5rem; border-radius: 25px; font-family: 'JetBrains Mono', monospace; font-weight: 700; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
+    .details-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,255,65,0.4); filter: brightness(1.2); }
+
+    /* Experience & Skills */
+    .experience-grid, .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
+    .experience-item, .skill-item { background: var(--bg-overlay); padding: 2rem; border-radius: 10px; border: 2px solid var(--secondary-color); transition: all 0.3s ease; }
+    .experience-item:hover, .skill-item:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(255,0,128,0.3); border-color: var(--primary-color); }
+    .experience-item h3, .skill-item h3 { color: var(--secondary-color); margin-bottom: 1rem; font-size: 1.3rem; }
+
+    /* Contact */
+    .contact-content { text-align: center; background: var(--bg-overlay); padding: 4rem; border-radius: 20px; border: 2px solid var(--primary-color); box-shadow: 0 0 30px rgba(0,255,65,0.3); }
+    .contact-btn { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: #000; border: none; padding: 1rem 2rem; border-radius: 30px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease; margin-top: 2rem; text-decoration: none; display: inline-block; }
+    .contact-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 30px rgba(0,255,65,0.5); filter: brightness(1.3); }
+
+    /* Click ripple */
+    .click-effect { position: fixed; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%); pointer-events: none; z-index: 50; animation: clickExpand 0.6s ease-out forwards; }
+    @keyframes clickExpand { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+
+    /* Scroll-reveal */
+    .reveal { opacity: 0; transform: translateY(24px); }
+    .reveal.visible { opacity: 1; transform: none; transition: opacity .6s ease-out, transform .6s ease-out; }
+    @media (prefers-reduced-motion: reduce) { .reveal, .reveal.visible { transform: none; transition: none; } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links { gap: 1rem; }
+      .hero h1 { font-size: 2.5rem; }
+      .typing-text { font-size: 2rem; }
+      .about-content { padding: 0 1rem; }
+      .section-header h2 { font-size: 2rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Animated Background Canvas -->
-    <canvas class="bg-canvas" id="bgCanvas"></canvas>
-    
-    <!-- Loading Screen with Typing Animation -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="typing-text" id="typingText"></div>
+  <!-- Animated Background Canvas -->
+  <canvas class="bg-canvas" id="bgCanvas"></canvas>
+
+  <!-- Loading Screen with Typing Animation -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="typing-text" id="typingText"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">Arnav Saraf</div>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li><!-- added -->
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="theme-switcher">
+        <button class="theme-btn theme-green" onclick="changeTheme('green')"></button>
+        <button class="theme-btn theme-purple" onclick="changeTheme('purple')"></button>
+        <button class="theme-btn theme-orange" onclick="changeTheme('orange')"></button>
+        <button class="theme-btn theme-blue" onclick="changeTheme('blue')"></button>
+      </div>
     </div>
-    
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">Arnav Saraf</div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <div class="theme-switcher">
-                <button class="theme-btn theme-green" onclick="changeTheme('green')"></button>
-                <button class="theme-btn theme-purple" onclick="changeTheme('purple')"></button>
-                <button class="theme-btn theme-orange" onclick="changeTheme('orange')"></button>
-                <button class="theme-btn theme-blue" onclick="changeTheme('blue')"></button>
-            </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="section">
+    <div class="container">
+      <div class="hero">
+        <h1><span class="name-variable">arnav</span><span class="name-dot">.</span><span class="name-property">saraf</span></h1>
+        <p>Waterloo Electrical Engineering Student, Looking for W26 Co-op</p>
+        <a href="https://drive.google.com/file/d/1fZQ-sy1JjL2o5HSqQnbDxcmJloFllwB5/view" class="resume-btn" target="_blank" rel="noopener noreferrer">Download Resume</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section reveal">
+    <div class="container">
+      <div class="section-header">
+        <h2>About Me</h2>
+      </div>
+      <div class="about-content">
+        <div class="about-text">
+          <p>I’m a first-year Electrical Engineering student at the University of Waterloo. I like work where drawings turn into things you can test—PCBs, robots, and small devices. I learn by building, keeping notes, and iterating.</p>
         </div>
-    </nav>
-    
-    <!-- Hero Section -->
-    <section id="home" class="section">
-        <div class="container">
-            <div class="hero">
-                <h1><span class="name-variable">arnav</span><span class="name-dot">.</span><span class="name-property">saraf</span></h1>
-                <p>Waterloo Electrical Engineering Student, Looking for W26 Co-op</p>
-                <a href="https://drive.google.com/file/d/1fZQ-sy1JjL2o5HSqQnbDxcmJloFllwB5/view" class="resume-btn" target="_blank" rel="noopener noreferrer">Download Resume</a>
-                <!-- REPLACE: put the link to your resume PDF above -->
-            </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="section reveal">
+    <div class="container">
+      <div class="section-header">
+        <h2>Projects</h2>
+      </div>
+      <div class="projects-grid">
+        <!-- Project 1 -->
+        <div class="project-card">
+          <a class="project-image" href="https://docs.google.com/document/d/1on-VO0tYvfKUWJ5uWTOMl_as87gN10TwcNVzQaik_nY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
+            <img src="img/sdSchematic.png" alt="CAN Logger image" loading="lazy" width="1200" height="800">
+          </a>
+          <h3>CAN Logger</h3>
+          <p>Created a CAN logger in Altium to store drone flight data on an SD card to act as a "black box".</p>
+          <a href="https://docs.google.com/document/d/1on-VO0tYvfKUWJ5uWTOMl_as87gN10TwcNVzQaik_nY/edit?usp=sharing" class="details-btn" target="_blank" rel="noopener noreferrer">View Details</a>
         </div>
-    </section>
-    
-    <!-- About Section -->
-    <section id="about" class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2>About Me</h2>
-            </div>
-            <div class="about-content">
-                <div class="about-text">
-                    <!-- CUSTOMIZE: Replace this with your actual about me content -->
-                    <p>I’m a first-year Electrical Engineering student at the University of Waterloo. I like work where drawings turn into things you can test—PCBs, robots, and small devices. I learn by building, keeping notes, and iterating.</p>
-                </div>
-            </div>
+        <!-- Project 2 -->
+        <div class="project-card">
+          <a class="project-image" href="https://docs.google.com/document/d/1WirqfEkASP_vqWMwpqWKYijGpoq9yqcMrtykkbcdfLE/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
+            <img src="img/FRCelevator.png" alt="Project 2 image" loading="lazy" width="1200" height="800">
+          </a>
+          <h3>FRC elevator</h3>
+          <p>Designed, prototyped and constructed an elevator mechanism to score FRC gameobjects.</p>
+          <a href="https://docs.google.com/document/d/1WirqfEkASP_vqWMwpqWKYijGpoq9yqcMrtykkbcdfLE/edit?usp=sharing" class="details-btn" target="_blank" rel="noopener noreferrer">View Details</a>
         </div>
-    </section>
-    
-    <!-- Projects Section -->
-    <section id="projects" class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Projects</h2>
-            </div>
-            <div class="projects-grid">
-                <!-- Project 1 -->
-                <div class="project-card">
-                    <!-- LINK: replace href with your details page / PDF / repo -->
-                    <a class="project-image" href="https://docs.google.com/document/d/1on-VO0tYvfKUWJ5uWTOMl_as87gN10TwcNVzQaik_nY/edit?usp=sharing" target="_blank" rel="noopener noreferrer"> <!-- REPLACE -->
-                        <!-- IMAGE: replace src with your image file path -->
-                        <img src="img/sdSchematic.png" alt="CAN Logger image" loading="lazy" width="1200" height="800"> <!-- REPLACE -->
-                    </a>
-                    <h3>CAN Logger</h3>
-                    <p>Created a CAN logger in Altium to store drone flight data on an SD card to act as a "black box".</p>
-                    <!-- LINK: typically same as the image link above -->
-                    <a href="https://docs.google.com/document/d/1on-VO0tYvfKUWJ5uWTOMl_as87gN10TwcNVzQaik_nY/edit?usp=sharing" class="details-btn" target="_blank" rel="noopener noreferrer">View Details</a> <!-- REPLACE -->
-                </div>
-                
-                <!-- Project 2 -->
-                <div class="project-card">
-                    <a class="project-image" href="https://docs.google.com/document/d/1WirqfEkASP_vqWMwpqWKYijGpoq9yqcMrtykkbcdfLE/edit?usp=sharing" target="_blank" rel="noopener noreferrer"> <!-- REPLACE -->
-                        <img src="img/FRCelevator.png" alt="Project 2 image" loading="lazy" width="1200" height="800"> <!-- REPLACE -->
-                    </a>
-                    <h3>FRC elevator</h3>
-                    <p>Designed, prototyped and constructed an elevator mechanism to score FRC gameobjects.</p>
-                    <a href="https://docs.google.com/document/d/1WirqfEkASP_vqWMwpqWKYijGpoq9yqcMrtykkbcdfLE/edit?usp=sharing" class="details-btn" target="_blank" rel="noopener noreferrer">View Details</a> <!-- REPLACE -->
-                </div>
-                
-                <!-- Project 3 -->
-                <div class="project-card">
-                    <a class="project-image" href="https://docs.google.com/document/d/1dOmY6XCTjeEFz2NsJ_imODBVkRRBvex3PEFBkAWFq2Y/edit?tab=t.0#heading=h.fs5nf15p5czj" target="_blank" rel="noopener noreferrer"> <!-- REPLACE -->
-                        <img src="img/basePic.jpg" alt="Project 3 image" loading="lazy" width="1200" height="800"> <!-- REPLACE -->
-                    </a>
-                    <h3>FRC Base Design/Assembly</h3>
-                    <p>Designed, and wired an FRC base using welding, 3D printing and stress tests.</p>
-                    <a href="https://docs.google.com/document/d/1dOmY6XCTjeEFz2NsJ_imODBVkRRBvex3PEFBkAWFq2Y/edit?tab=t.0#heading=h.fs5nf15p5czj" class="details-btn" target="_blank" rel="noopener noreferrer">View Details</a> <!-- REPLACE -->
-                </div>
-
-                <!-- Project 4 (fixed broken tags) -->
-                <div class="project-card">
-                    <a class="project-image" href="https://docs.google.com/document/d/1hmQ2oFIqS7l-_OiWnjm05VqmEpehHuo6KhvSAOlggI8/edit?tab=t.0" target="_blank" rel="noopener noreferrer"> <!-- REPLACE -->
-                        <img src="img/boat.png" alt="Project 4 image" loading="lazy" width="1200" height="800"> <!-- REPLACE -->
-                    </a>
-                    <h3>Solar Boat</h3>
-                    <p>Led design team to build a solar powered boat for the UBC pyhsics olympics. Designed, tested and soldered various mechanisms and components.</p>
-                    <a href="https://docs.google.com/document/d/1hmQ2oFIqS7l-_OiWnjm05VqmEpehHuo6KhvSAOlggI8/edit?tab=t.0" class="details-btn" target="_blank" rel="noopener noreferrer">View Details</a> <!-- REPLACE -->
-                </div>
-                
-                <!-- You can copy a card block above and add more projects -->
-            </div>
+        <!-- Project 3 -->
+        <div class="project-card">
+          <a class="project-image" href="https://docs.google.com/document/d/1dOmY6XCTjeEFz2NsJ_imODBVkRRBvex3PEFBkAWFq2Y/edit?tab=t.0#heading=h.fs5nf15p5czj" target="_blank" rel="noopener noreferrer">
+            <img src="img/basePic.jpg" alt="Project 3 image" loading="lazy" width="1200" height="800">
+          </a>
+          <h3>FRC Base Design/Assembly</h3>
+          <p>Designed, and wired an FRC base using welding, 3D printing and stress tests.</p>
+          <a href="https://docs.google.com/document/d/1dOmY6XCTjeEFz2NsJ_imODBVkRRBvex3PEFBkAWFq2Y/edit?tab=t.0#heading=h.fs5nf15p5czj" class="details-btn" target="_blank" rel="noopener noreferrer">View Details</a>
         </div>
-    </section>
-    
-    <!-- Experience Section -->
-    <section id="experience" class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Experience</h2>
-            </div>
-            <div class="experience-grid">
-                <div class="experience-item">
-                    <h3>Electric Team Member (Waterloo Aerial Robotics Group)</h3>
-                    <p><strong>Duration:</strong>Aug 2025 - Present</p>
-                    <p>- Designed a CAN logger using the STM32 and SDMMC protocol to log flight data to an SD card (Altium).<p>
-
-                        - Applied electrical theory to create efficient PCB layouts considering resistance, heat, and impedance.<p>
-
-                        </p>
-                        - Manufactured PCBs: ordering, soldering, and validation testing.</p>
-                </div>
-                <div class="experience-item">
-                    <h3>Robotics Team Member - Ten Ton Robotics Academy(FRC)</h3>
-                    <p><strong>Duration:</strong> December 2024 - June 2025</p>
-                    <p>- Used collaborative CAD to plan complex mechanisms and robot layouts.<p>
-
-                    </p>
-                        - Rapidly prototyped designs using wood, aluminum, and 3D-printed parts.<p>
-
-                        </p>
-                        - Assembled electronics with a repairable wiring layout; soldering and cable management.<p>
-
-                        </p>
-                        - Manufactured parts with 3-axis CNC, 3D printer, and laser cutter.<p>
-
-                        </p>
-                        - Recorded and analyzed match data in Excel to find weak spots and strategies.</p>
-                </div>
-                <div class="experience-item">
-                    <h3>Team Lead - Ten Ton Robotics Academy (VRC)</h3>
-                    <p><strong>Duration:</strong> September 2020 - June 2024</p>
-                    <p>- Led a team for 4 years across design, programming, and strategy; qualified for provincials.<p>
-
-                    </p>
-- Iterated and documented improvements, keeping detailed build/design logs.<p>
-
-</p>
-- Programmed autonomous routines in C++ with PID for precision and reliability.<p>
-
-</p>
-- Planned designs and records in Fusion 360 and Onshape.</p>
-                </div>
-            </div>
+        <!-- Project 4 -->
+        <div class="project-card">
+          <a class="project-image" href="https://docs.google.com/document/d/1hmQ2oFIqS7l-_OiWnjm05VqmEpehHuo6KhvSAOlggI8/edit?tab=t.0" target="_blank" rel="noopener noreferrer">
+            <img src="img/boat.png" alt="Project 4 image" loading="lazy" width="1200" height="800">
+          </a>
+          <h3>Solar Boat</h3>
+          <p>Led design team to build a solar powered boat for the UBC pyhsics olympics. Designed, tested and soldered various mechanisms and components.</p>
+          <a href="https://docs.google.com/document/d/1hmQ2oFIqS7l-_OiWnjm05VqmEpehHuo6KhvSAOlggI8/edit?tab=t.0" class="details-btn" target="_blank" rel="noopener noreferrer">View Details</a>
         </div>
-    </section>
-    
-    <!-- Skills Section -->
-    <section id="skills" class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Skills</h2>
-            </div>
-            <div class="skills-grid">
-                <div class="skill-item">
-                    <h3>EDM</h3>
-                    <p>Altium (footprint/symbol creation, schematic design, layout design and optimization)</p>
-                </div>
-                <div class="skill-item">
-                    <h3>Programming</h3>
-                    <p>Python, C++, HTML, MATLAB</p>
-                </div>
-                <div class="skill-item">
-                    <h3>Tools</h3>
-                    <p>3D printing, Laser Cutting, Multi-Meter, Oscilloscope, Soldering</p>
-                </div>
-                <div class="skill-item">
-                    <h3>Other</h3>
-                    <p>Technical Writing, Lab Safety, Version Control</p>
-                </div>
-            </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section id="experience" class="section reveal">
+    <div class="container">
+      <div class="section-header"><h2>Experience</h2></div>
+      <div class="experience-grid">
+        <div class="experience-item">
+          <h3>Electric Team Member (Waterloo Aerial Robotics Group)</h3>
+          <p><strong>Duration:</strong>Aug 2025 - Present</p>
+          <p>- Designed a CAN logger using the STM32 and SDMMC protocol to log flight data to an SD card (Altium).</p>
+          <p>- Applied electrical theory to create efficient PCB layouts considering resistance, heat, and impedance.</p>
+          <p>- Manufactured PCBs: ordering, soldering, and validation testing.</p>
         </div>
-    </section>
-    
-    <!-- Contact Section -->
-    <section id="contact" class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Get In Touch</h2>
-            </div>
-            <div class="contact-content">
-                <h3>Let's Work Together!</h3>
-                <p>I'm always interested in new opportunities and exciting projects. Whether you have a question or just want to say hi, feel free to reach out!</p>
-                <a href="mailto:arnavs1971@gmail.com" class="contact-btn">Contact Me</a>
-            </div>
+        <div class="experience-item">
+          <h3>Robotics Team Member - Ten Ton Robotics Academy(FRC)</h3>
+          <p><strong>Duration:</strong> December 2024 - June 2025</p>
+          <p>- Used collaborative CAD to plan complex mechanisms and robot layouts.</p>
+          <p>- Rapidly prototyped designs using wood, aluminum, and 3D-printed parts.</p>
+          <p>- Assembled electronics with a repairable wiring layout; soldering and cable management.</p>
+          <p>- Manufactured parts with 3-axis CNC, 3D printer, and laser cutter.</p>
+          <p>- Recorded and analyzed match data in Excel to find weak spots and strategies.</p>
         </div>
-    </section>
-    
-    <script>
-        // Typing Animation
-        const typingText = document.getElementById('typingText');
-        const loadingScreen = document.getElementById('loadingScreen');
-        const nameText = "arnav.saraf";
-        let i = 0;
-        function typeWriter() {
-            if (i < nameText.length) {
-                const char = nameText.charAt(i);
-                let colorClass = '';
-                if (i < 5) { colorClass = 'name-variable'; }
-                else if (i === 5) { colorClass = 'name-dot'; }
-                else { colorClass = 'name-property'; }
-                typingText.innerHTML += `<span class="${colorClass}">${char}</span>`;
-                i++; setTimeout(typeWriter, 150);
-            } else {
-                setTimeout(() => {
-                    typingText.innerHTML += '<span class="cursor">|</span>';
-                    setTimeout(() => { loadingScreen.style.opacity = '0'; setTimeout(() => { loadingScreen.style.display = 'none'; }, 1000); }, 1000);
-                }, 500);
-            }
+        <div class="experience-item">
+          <h3>Team Lead - Ten Ton Robotics Academy (VRC)</h3>
+          <p><strong>Duration:</strong> September 2020 - June 2024</p>
+          <p>- Led a team for 4 years across design, programming, and strategy; qualified for provincials.</p>
+          <p>- Iterated and documented improvements, keeping detailed build/design logs.</p>
+          <p>- Programmed autonomous routines in C++ with PID for precision and reliability.</p>
+          <p>- Planned designs and records in Fusion 360 and Onshape.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="section reveal">
+    <div class="container">
+      <div class="section-header"><h2>Skills</h2></div>
+      <div class="skills-grid">
+        <div class="skill-item"><h3>EDM</h3><p>Altium (footprint/symbol creation, schematic design, layout design and optimization)</p></div>
+        <div class="skill-item"><h3>Programming</h3><p>Python, C++, HTML, MATLAB</p></div>
+        <div class="skill-item"><h3>Tools</h3><p>3D printing, Laser Cutting, Multi-Meter, Oscilloscope, Soldering</p></div>
+        <div class="skill-item"><h3>Other</h3><p>Technical Writing, Lab Safety, Version Control</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section reveal">
+    <div class="container">
+      <div class="section-header"><h2>Get In Touch</h2></div>
+      <div class="contact-content">
+        <h3>Let's Work Together!</h3>
+        <p>I'm always interested in new opportunities and exciting projects. Whether you have a question or just want to say hi, feel free to reach out!</p>
+        <a href="mailto:arnavs1971@gmail.com" class="contact-btn">Contact Me</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Typing Animation + align-to-title exit
+    const typingText = document.getElementById('typingText');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const heroTitle = document.querySelector('.hero h1');
+    const nameText = "arnav.saraf";
+    let i = 0;
+
+    function typeWriter() {
+      if (i < nameText.length) {
+        const char = nameText.charAt(i);
+        let colorClass = '';
+        if (i < 5) colorClass = 'name-variable';
+        else if (i === 5) colorClass = 'name-dot';
+        else colorClass = 'name-property';
+        typingText.innerHTML += `<span class="${colorClass}">${char}</span>`;
+        i++; setTimeout(typeWriter, 150);
+      } else {
+        // Add caret, then align animation -> fade out screen -> reveal hero title
+        typingText.innerHTML += '<span class="cursor">|</span>';
+        setTimeout(() => {
+          alignIntroToTitle();
+        }, 300);
+      }
+    }
+
+    function alignIntroToTitle() {
+      // Compute vector from typing text center to hero title center
+      const t = typingText.getBoundingClientRect();
+      const h = heroTitle.getBoundingClientRect();
+      const dx = (h.left + h.width/2) - (t.left + t.width/2);
+      const dy = (h.top + h.height/2) - (t.top + t.height/2);
+      typingText.style.transition = 'transform 700ms ease, opacity 500ms ease';
+      typingText.style.transform = `translate(${dx}px, ${dy}px)`;
+      // Crossfade overlay and reveal hero title
+      setTimeout(() => {
+        loadingScreen.style.opacity = '0';
+        heroTitle.style.transition = 'opacity 400ms ease 150ms';
+        heroTitle.style.opacity = '1';
+        setTimeout(() => { loadingScreen.style.display = 'none'; }, 650);
+      }, 740);
+    }
+
+    window.addEventListener('load', () => { setTimeout(typeWriter, 500); });
+
+    // Background Canvas Animation
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let mouseX = 0, mouseY = 0;
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+    document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+    function animateBackground() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 300);
+      const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+      const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
+      gradient.addColorStop(0, primaryColor + '20');
+      gradient.addColorStop(0.5, secondaryColor + '10');
+      gradient.addColorStop(1, 'transparent');
+      ctx.fillStyle = gradient; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < 50; i++) {
+        const x = (mouseX + Math.sin(Date.now() * 0.001 + i) * 100) % canvas.width;
+        const y = (mouseY + Math.cos(Date.now() * 0.001 + i) * 100) % canvas.height;
+        ctx.beginPath(); ctx.arc(x, y, 1, 0, Math.PI * 2); ctx.fillStyle = primaryColor + '40'; ctx.fill();
+      }
+      requestAnimationFrame(animateBackground);
+    }
+    animateBackground();
+
+    // Click ripple effect
+    document.addEventListener('click', (e) => {
+      const clickEffect = document.createElement('div');
+      clickEffect.className = 'click-effect';
+      clickEffect.style.left = (e.clientX - 50) + 'px';
+      clickEffect.style.top = (e.clientY - 50) + 'px';
+      document.body.appendChild(clickEffect);
+      setTimeout(() => clickEffect.remove(), 600);
+    });
+
+    // Theme switcher
+    function changeTheme(theme) {
+      const root = document.documentElement;
+      switch(theme) {
+        case 'green':
+          root.style.setProperty('--primary-color', '#0d9488');
+          root.style.setProperty('--secondary-color', '#dc2626');
+          root.style.setProperty('--accent-color', '#d97706');
+          root.style.setProperty('--bg-color', '#f0f4f8');
+          root.style.setProperty('--text-color', '#1f2937');
+          root.style.setProperty('--bg-overlay', 'rgba(255, 255, 255, 0.9)');
+          document.documentElement.style.setProperty('--name-variable-color', '#0369a1');
+          document.documentElement.style.setProperty('--name-property-color', '#b45309');
+          document.documentElement.style.setProperty('--name-dot-color', '#6b7280');
+          break;
+        case 'purple':
+          root.style.setProperty('--primary-color', '#bb86fc');
+          root.style.setProperty('--secondary-color', '#cf6679');
+          root.style.setProperty('--accent-color', '#03dac6');
+          root.style.setProperty('--bg-color', '#121212');
+          root.style.setProperty('--text-color', '#ffffff');
+          root.style.setProperty('--bg-overlay', 'rgba(18, 18, 18, 0.9)');
+          document.documentElement.style.setProperty('--name-variable-color', '#9cdcfe');
+          document.documentElement.style.setProperty('--name-property-color', '#dcdcaa');
+          document.documentElement.style.setProperty('--name-dot-color', '#d4d4d4');
+          break;
+        case 'orange':
+          root.style.setProperty('--primary-color', '#ea580c');
+          root.style.setProperty('--secondary-color', '#dc2626');
+          root.style.setProperty('--accent-color', '#0891b2');
+          root.style.setProperty('--bg-color', '#fff8e1');
+          root.style.setProperty('--text-color', '#292524');
+          root.style.setProperty('--bg-overlay', 'rgba(255, 248, 225, 0.9)');
+          document.documentElement.style.setProperty('--name-variable-color', '#0369a1');
+          document.documentElement.style.setProperty('--name-property-color', '#b45309');
+          document.documentElement.style.setProperty('--name-dot-color', '#6b7280');
+          break;
+        case 'blue':
+          root.style.setProperty('--primary-color', '#42a5f5');
+          root.style.setProperty('--secondary-color', '#26c6da');
+          root.style.setProperty('--accent-color', '#ffab40');
+          root.style.setProperty('--bg-color', '#0d1421');
+          root.style.setProperty('--text-color', '#e3f2fd');
+          root.style.setProperty('--bg-overlay', 'rgba(13, 20, 33, 0.9)');
+          document.documentElement.style.setProperty('--name-variable-color', '#9cdcfe');
+          document.documentElement.style.setProperty('--name-property-color', '#dcdcaa');
+          document.documentElement.style.setProperty('--name-dot-color', '#d4d4d4');
+          break;
+      }
+    }
+
+    // Smooth scrolling nav
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        const href = anchor.getAttribute('href');
+        if (href.length > 1) { // ignore just '#'
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-        window.addEventListener('load', () => { setTimeout(typeWriter, 500); });
-        
-        // Background Canvas Animation
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        let mouseX = 0; let mouseY = 0;
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        resizeCanvas(); window.addEventListener('resize', resizeCanvas);
-        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
-        function animateBackground() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 300);
-            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
-            const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
-            gradient.addColorStop(0, primaryColor + '20');
-            gradient.addColorStop(0.5, secondaryColor + '10');
-            gradient.addColorStop(1, 'transparent');
-            ctx.fillStyle = gradient; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < 50; i++) {
-                const x = (mouseX + Math.sin(Date.now() * 0.001 + i) * 100) % canvas.width;
-                const y = (mouseY + Math.cos(Date.now() * 0.001 + i) * 100) % canvas.height;
-                ctx.beginPath(); ctx.arc(x, y, 1, 0, Math.PI * 2); ctx.fillStyle = primaryColor + '40'; ctx.fill();
-            }
-            requestAnimationFrame(animateBackground);
+      });
+    });
+
+    // Navbar background on scroll
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      navbar.style.background = (window.scrollY > 100) ? 'rgba(0,0,0,0.95)' : 'rgba(0,0,0,0.8)';
+    });
+
+    // IntersectionObserver for section fade-ins
+    const observer = ('IntersectionObserver' in window) ? new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
         }
-        animateBackground();
-        
-        // Click effect
-        document.addEventListener('click', (e) => {
-            const clickEffect = document.createElement('div');
-            clickEffect.className = 'click-effect';
-            clickEffect.style.left = (e.clientX - 50) + 'px';
-            clickEffect.style.top = (e.clientY - 50) + 'px';
-            document.body.appendChild(clickEffect);
-            setTimeout(() => { clickEffect.remove(); }, 600);
-        });
-        
-        // Theme switcher
-        function changeTheme(theme) {
-            const root = document.documentElement;
-            switch(theme) {
-                case 'green':
-                    root.style.setProperty('--primary-color', '#0d9488');
-                    root.style.setProperty('--secondary-color', '#dc2626');
-                    root.style.setProperty('--accent-color', '#d97706');
-                    root.style.setProperty('--bg-color', '#f0f4f8');
-                    root.style.setProperty('--text-color', '#1f2937');
-                    root.style.setProperty('--bg-overlay', 'rgba(255, 255, 255, 0.9)');
-                    document.documentElement.style.setProperty('--name-variable-color', '#0369a1');
-                    document.documentElement.style.setProperty('--name-property-color', '#b45309');
-                    document.documentElement.style.setProperty('--name-dot-color', '#6b7280');
-                    break;
-                case 'purple':
-                    root.style.setProperty('--primary-color', '#bb86fc');
-                    root.style.setProperty('--secondary-color', '#cf6679');
-                    root.style.setProperty('--accent-color', '#03dac6');
-                    root.style.setProperty('--bg-color', '#121212');
-                    root.style.setProperty('--text-color', '#ffffff');
-                    root.style.setProperty('--bg-overlay', 'rgba(18, 18, 18, 0.9)');
-                    document.documentElement.style.setProperty('--name-variable-color', '#9cdcfe');
-                    document.documentElement.style.setProperty('--name-property-color', '#dcdcaa');
-                    document.documentElement.style.setProperty('--name-dot-color', '#d4d4d4');
-                    break;
-                case 'orange':
-                    root.style.setProperty('--primary-color', '#ea580c');
-                    root.style.setProperty('--secondary-color', '#dc2626');
-                    root.style.setProperty('--accent-color', '#0891b2');
-                    root.style.setProperty('--bg-color', '#fff8e1');
-                    root.style.setProperty('--text-color', '#292524');
-                    root.style.setProperty('--bg-overlay', 'rgba(255, 248, 225, 0.9)');
-                    document.documentElement.style.setProperty('--name-variable-color', '#0369a1');
-                    document.documentElement.style.setProperty('--name-property-color', '#b45309');
-                    document.documentElement.style.setProperty('--name-dot-color', '#6b7280');
-                    break;
-                case 'blue':
-                    root.style.setProperty('--primary-color', '#42a5f5');
-                    root.style.setProperty('--secondary-color', '#26c6da');
-                    root.style.setProperty('--accent-color', '#ffab40');
-                    root.style.setProperty('--bg-color', '#0d1421');
-                    root.style.setProperty('--text-color', '#e3f2fd');
-                    root.style.setProperty('--bg-overlay', 'rgba(13, 20, 33, 0.9)');
-                    document.documentElement.style.setProperty('--name-variable-color', '#9cdcfe');
-                    document.documentElement.style.setProperty('--name-property-color', '#dcdcaa');
-                    document.documentElement.style.setProperty('--name-dot-color', '#d4d4d4');
-                    break;
-            }
-        }
-        
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-            });
-        });
-        
-        // Navbar background on scroll
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 100) { navbar.style.background = 'rgba(0, 0, 0, 0.95)'; }
-            else { navbar.style.background = 'rgba(0, 0, 0, 0.8)'; }
-        });
-    </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9911e634a7a9aaf8',t:'MTc2MDg5MzkzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+      });
+    }, { rootMargin: '0px 0px -15%', threshold: 0.1 }) : null;
+
+    if (observer) {
+      document.querySelectorAll('.section.reveal').forEach(el => observer.observe(el));
+    } else {
+      // Fallback: just show sections
+      document.querySelectorAll('.section.reveal').forEach(el => el.classList.add('visible'));
+    }
+  </script>
 </body>
 </html>
