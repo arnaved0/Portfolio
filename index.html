@@ -144,9 +144,14 @@
     @keyframes clickExpand { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
 
     /* Scroll-reveal */
-    .reveal { opacity: 0; transform: translateY(24px); }
-    .reveal.visible { opacity: 1; transform: none; transition: opacity .6s ease-out, transform .6s ease-out; }
-    @media (prefers-reduced-motion: reduce) { .reveal, .reveal.visible { transform: none; transition: none; } }
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .8s ease, transform .8s ease; /* slowed down from .45s */
+      will-change: opacity, transform;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .reveal, .reveal.visible { transform: none; transition: none; } } }
 
     /* Responsive */
     @media (max-width: 768px) {
@@ -490,21 +495,38 @@
       navbar.style.background = (window.scrollY > 100) ? 'rgba(0,0,0,0.95)' : 'rgba(0,0,0,0.8)';
     });
 
-    // IntersectionObserver for section fade-ins
+    // IntersectionObserver for section fade-ins (fade in/out with scroll)
     const observer = ('IntersectionObserver' in window) ? new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
+        // Toggle visibility based on intersection amount
+        const ratio = entry.intersectionRatio || 0;
+        if (ratio > 0.18) {
           entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+        } else {
+          entry.target.classList.remove('visible');
         }
       });
-    }, { rootMargin: '0px 0px -15%', threshold: 0.1 }) : null;
+    }, {
+      root: null,
+      rootMargin: '0px 0px -10% 0px',
+      threshold: [0, 0.1, 0.18, 0.3, 0.5, 0.75, 1]
+    }) : null;
 
     if (observer) {
       document.querySelectorAll('.section.reveal').forEach(el => observer.observe(el));
     } else {
-      // Fallback: just show sections
-      document.querySelectorAll('.section.reveal').forEach(el => el.classList.add('visible'));
+      // Fallback: toggle on scroll
+      function updateVisibility(){
+        const vh = window.innerHeight;
+        document.querySelectorAll('.section.reveal').forEach(el => {
+          const rect = el.getBoundingClientRect();
+          const visible = rect.top < vh * 0.85 && rect.bottom > vh * 0.15;
+          el.classList.toggle('visible', visible);
+        });
+      }
+      window.addEventListener('scroll', updateVisibility, { passive: true });
+      window.addEventListener('resize', updateVisibility);
+      updateVisibility();
     }
   </script>
 </body>
