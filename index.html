@@ -144,14 +144,9 @@
     @keyframes clickExpand { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
 
     /* Scroll-reveal */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity .8s ease, transform .8s ease; /* slowed down from .45s */
-      will-change: opacity, transform;
-    }
-    .reveal.visible { opacity: 1; transform: none; }
-    @media (prefers-reduced-motion: reduce) { .reveal, .reveal.visible { transform: none; transition: none; } } }
+    .reveal { opacity: 0; transform: translateY(24px); }
+    .reveal.visible { opacity: 1; transform: none; transition: opacity .6s ease-out, transform .6s ease-out; }
+    @media (prefers-reduced-motion: reduce) { .reveal, .reveal.visible { transform: none; transition: none; } }
 
     /* Responsive */
     @media (max-width: 768px) {
@@ -199,7 +194,7 @@
   <section id="home" class="section">
     <div class="container">
       <div class="hero">
-        <h1><span class="name-variable">arnav</span><span class="name-dot">.</span><span class="name-property">saraf</span></h1>
+        <h1><span class="name-variable">arnav</span><span class="name-dot">_</span><span class="name-property">saraf</span></h1>
         <p>Waterloo Electrical Engineering Student, Looking for W26 Co-op</p>
         <a href="https://drive.google.com/file/d/1fZQ-sy1JjL2o5HSqQnbDxcmJloFllwB5/view" class="resume-btn" target="_blank" rel="noopener noreferrer">Download Resume</a>
       </div>
@@ -330,7 +325,7 @@
     const typingText = document.getElementById('typingText');
     const loadingScreen = document.getElementById('loadingScreen');
     const heroTitle = document.querySelector('.hero h1');
-    const nameText = "arnav.saraf";
+    const nameText = "arnav_saraf";
     let i = 0;
 
     // Scroll lock helpers to prevent scrolling during the intro animation
@@ -495,38 +490,21 @@
       navbar.style.background = (window.scrollY > 100) ? 'rgba(0,0,0,0.95)' : 'rgba(0,0,0,0.8)';
     });
 
-    // IntersectionObserver for section fade-ins (fade in/out with scroll)
+    // IntersectionObserver for section fade-ins
     const observer = ('IntersectionObserver' in window) ? new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        // Toggle visibility based on intersection amount
-        const ratio = entry.intersectionRatio || 0;
-        if (ratio > 0.18) {
+        if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-        } else {
-          entry.target.classList.remove('visible');
+          observer.unobserve(entry.target);
         }
       });
-    }, {
-      root: null,
-      rootMargin: '0px 0px -10% 0px',
-      threshold: [0, 0.1, 0.18, 0.3, 0.5, 0.75, 1]
-    }) : null;
+    }, { rootMargin: '0px 0px -15%', threshold: 0.1 }) : null;
 
     if (observer) {
       document.querySelectorAll('.section.reveal').forEach(el => observer.observe(el));
     } else {
-      // Fallback: toggle on scroll
-      function updateVisibility(){
-        const vh = window.innerHeight;
-        document.querySelectorAll('.section.reveal').forEach(el => {
-          const rect = el.getBoundingClientRect();
-          const visible = rect.top < vh * 0.85 && rect.bottom > vh * 0.15;
-          el.classList.toggle('visible', visible);
-        });
-      }
-      window.addEventListener('scroll', updateVisibility, { passive: true });
-      window.addEventListener('resize', updateVisibility);
-      updateVisibility();
+      // Fallback: just show sections
+      document.querySelectorAll('.section.reveal').forEach(el => el.classList.add('visible'));
     }
   </script>
 </body>
